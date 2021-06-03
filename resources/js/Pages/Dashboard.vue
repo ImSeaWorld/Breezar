@@ -1,5 +1,5 @@
 <template>
-    <breeze-authenticated-layout>
+    <breeze-authenticated-layout :auth="auth">
         <template #header>
             <span class="text-h6 text-center">
                 Dashboard
