@@ -21,7 +21,7 @@ mix.js('resources/js/app.js', 'public/js')
     .sass('node_modules/quasar/dist/quasar.sass', 'public/css')
     .webpackConfig(require('./webpack.config'));
 
-mix.browserSync({proxy: 'localhost:8000'});
+mix.browserSync({proxy: 'localhost:8000', notify: false});
 
 if (mix.inProduction()) {
     mix.version();
