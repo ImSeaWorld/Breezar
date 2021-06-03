@@ -1,5 +1,5 @@
 <template>
-    <div class="mb-4 text-sm text-gray-600">
+    <div class="q-mb-sm text-sm text-gray-600">
         This is a secure area of the application. Please confirm your password before continuing.
     </div>
 
@@ -20,41 +20,41 @@
 </template>
 
 <script>
-    import BreezeButton from '@/Components/Button'
-    import BreezeGuestLayout from "@/Layouts/Guest"
-    import BreezeInput from '@/Components/Input'
-    import BreezeLabel from '@/Components/Label'
-    import BreezeValidationErrors from '@/Components/ValidationErrors'
+import BreezeButton from '@/Components/Button';
+import BreezeGuestLayout from '@/Layouts/Guest';
+import BreezeInput from '@/Components/Input';
+import BreezeLabel from '@/Components/Label';
+import BreezeValidationErrors from '@/Components/ValidationErrors';
 
-    export default {
-        layout: BreezeGuestLayout,
+export default {
+    layout: BreezeGuestLayout,
 
-        components: {
-            BreezeButton,
-            BreezeInput,
-            BreezeLabel,
-            BreezeValidationErrors,
+    components: {
+        BreezeButton,
+        BreezeInput,
+        BreezeLabel,
+        BreezeValidationErrors,
+    },
+
+    props: {
+        auth: Object,
+        errors: Object,
+    },
+
+    data() {
+        return {
+            form: this.$inertia.form({
+                password: '',
+            }),
+        };
+    },
+
+    methods: {
+        submit() {
+            this.form.post(this.route('password.confirm'), {
+                onFinish: () => this.form.reset(),
+            });
         },
-
-        props: {
-            auth: Object,
-            errors: Object,
-        },
-
-        data() {
-            return {
-                form: this.$inertia.form({
-                    password: '',
-                })
-            }
-        },
-
-        methods: {
-            submit() {
-                this.form.post(this.route('password.confirm'), {
-                    onFinish: () => this.form.reset(),
-                })
-            }
-        }
-    }
+    },
+};
 </script>

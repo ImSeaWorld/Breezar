@@ -15,10 +15,13 @@ mix.js('resources/js/app.js', 'public/js')
     .vue()
     .postCss('resources/css/app.css', 'public/css', [
         require('postcss-import'),
-        require('tailwindcss'),
+        //require('tailwindcss'),
         require('autoprefixer'),
     ])
+    .sass('node_modules/quasar/dist/quasar.sass', 'public/css')
     .webpackConfig(require('./webpack.config'));
+
+mix.browserSync({proxy: 'localhost:8000'});
 
 if (mix.inProduction()) {
     mix.version();

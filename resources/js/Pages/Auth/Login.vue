@@ -1,82 +1,110 @@
 <template>
-    <breeze-validation-errors class="mb-4" />
+    <div class="row justify-center align-center items-center full-height">
+        <div class="col-11 col-md-4 col-lg-3">
 
-    <div v-if="status" class="mb-4 font-medium text-sm text-green-600">
-        {{ status }}
+            <div v-if="status" class="q-mb-sm text-sm text-green-6">
+                {{ status }}
+            </div>
+
+            <q-card flat bordered>
+                <q-item>
+                    <q-item-section>
+                        <q-item-label class="text-center">Login</q-item-label>
+                    </q-item-section>
+                </q-item>
+
+                <q-separator />
+
+                <q-card-section>
+                    <q-form @submit.prevent="submit">
+                        <q-input 
+                            label="Email" 
+                            v-model="form.email"
+                            :error="errors.email ? true : null"
+                            :error-message="errors.email"
+                        >
+                            <template #prepend>
+                                <q-icon name="mdi-email" />
+                            </template>
+                        </q-input>
+                        
+                        <q-input 
+                            label="Password" 
+                            type="password" 
+                            v-model="form.password"
+                            :error="errors.password ? true : null"
+                            :error-message="errors.password"
+                        >
+                            <template #prepend>
+                                <q-icon name="mdi-key" />
+                            </template>
+                        </q-input>
+
+                        <div class="row q-py-sm">
+                            <div class="col-6">
+                                <q-toggle v-model="form.remember" label="Remember Me" />
+                            </div>
+
+                            <div class="col-6">
+                                <div class="row full-height items-center justify-end">
+                                    <inertia-link v-if="canResetPassword" :href="route('password.request')">
+                                        Forgot your password?
+                                    </inertia-link>
+                                </div>
+                            </div>
+                        </div>
+
+                        <q-btn-group spread>
+                            <q-btn label="Login" color="secondary" type="submit" />
+                            <q-btn label="Register" type="button" @click.prevent="$inertia.visit('register')" />
+                        </q-btn-group>
+                    </q-form>
+                </q-card-section>
+            </q-card>
+        </div>
     </div>
-
-    <form @submit.prevent="submit">
-        <div>
-            <breeze-label for="email" value="Email" />
-            <breeze-input id="email" type="email" class="mt-1 block w-full" v-model="form.email" required autofocus autocomplete="username" />
-        </div>
-
-        <div class="mt-4">
-            <breeze-label for="password" value="Password" />
-            <breeze-input id="password" type="password" class="mt-1 block w-full" v-model="form.password" required autocomplete="current-password" />
-        </div>
-
-        <div class="block mt-4">
-            <label class="flex items-center">
-                <breeze-checkbox name="remember" v-model:checked="form.remember" />
-                <span class="ml-2 text-sm text-gray-600">Remember me</span>
-            </label>
-        </div>
-
-        <div class="flex items-center justify-end mt-4">
-            <inertia-link v-if="canResetPassword" :href="route('password.request')" class="underline text-sm text-gray-600 hover:text-gray-900">
-                Forgot your password?
-            </inertia-link>
-
-            <breeze-button class="ml-4" :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
-                Log in
-            </breeze-button>
-        </div>
-    </form>
 </template>
 
 <script>
-    import BreezeButton from '@/Components/Button'
-    import BreezeGuestLayout from "@/Layouts/Guest"
-    import BreezeInput from '@/Components/Input'
-    import BreezeCheckbox from '@/Components/Checkbox'
-    import BreezeLabel from '@/Components/Label'
-    import BreezeValidationErrors from '@/Components/ValidationErrors'
+import BreezeGuestLayout from '@/Layouts/Guest';
+import BreezeValidationErrors from '@/Components/ValidationErrors';
 
-    export default {
-        layout: BreezeGuestLayout,
+export default {
+    layout: BreezeGuestLayout,
 
-        components: {
-            BreezeButton,
-            BreezeInput,
-            BreezeCheckbox,
-            BreezeLabel,
-            BreezeValidationErrors
+    components: {
+        BreezeValidationErrors,
+    },
+
+    props: {
+        auth: Object,
+        canResetPassword: Boolean,
+        errors: Object,
+        status: String,
+    },
+
+    data() {
+        return {
+            form: this.$inertia.form({
+                email: '',
+                password: '',
+                remember: false,
+            }),
+        };
+    },
+
+    computed: {
+        errors() {
+            return this.$page.props.errors;
         },
+    },
 
-        props: {
-            auth: Object,
-            canResetPassword: Boolean,
-            errors: Object,
-            status: String,
+    methods: {
+        submit() {
+            this.form.post(this.route('login'), {
+                onFinish: () => this.form.reset('password'),
+            });
         },
-
-        data() {
-            return {
-                form: this.$inertia.form({
-                    email: '',
-                    password: '',
-                    remember: false
-                })
-            }
-        },
-
-        methods: {
-            submit() {
-                this.form.post(this.route('login'), {
-                    onFinish: () => this.form.reset('password'),
-                })
-            }
-        }
-    }
+    },
+};
 </script>
