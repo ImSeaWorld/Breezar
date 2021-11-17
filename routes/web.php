@@ -24,10 +24,6 @@ Route::get('/', function () {
     ]);
 });
 
-Route::get('/balls', function () {
-    return Inertia::render('Auth/VerifyEmail', ['status' => session('status')]);
-});
-
 Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
