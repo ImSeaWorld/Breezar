@@ -66,23 +66,16 @@
 </template>
 
 <script>
-import BreezeGuestLayout from '@/Layouts/Guest';
-import BreezeValidationErrors from '@/Components/ValidationErrors';
+import Guest from '@/Layouts/Guest';
 
 export default {
-    layout: BreezeGuestLayout,
-
-    components: {
-        BreezeValidationErrors,
-    },
-
+    layout: Guest,
     props: {
         auth: Object,
         canResetPassword: Boolean,
         errors: Object,
         status: String,
     },
-
     data() {
         return {
             form: this.$inertia.form({
@@ -92,18 +85,21 @@ export default {
             }),
         };
     },
-
     computed: {
         errors() {
             return this.$page.props.errors;
         },
     },
-
     methods: {
         submit() {
             this.form.post(this.route('login'), {
                 onFinish: () => this.form.reset('password'),
             });
+        },
+    },
+    watch: {
+        'form.password'(to) {
+            console.log(to);
         },
     },
 };

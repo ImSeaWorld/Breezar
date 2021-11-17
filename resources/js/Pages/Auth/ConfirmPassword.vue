@@ -1,46 +1,56 @@
 <template>
-    <div class="q-mb-sm text-sm text-gray-600">
-        This is a secure area of the application. Please confirm your password before continuing.
+    <div class="row justify-center align-center items-center full-height">
+        <div class="col-11 col-md-4 col-lg-3">
+            <q-card flat bordered>
+                <q-item>
+                    <q-item-section>
+                        <q-item-label class="text-center">Forgot Password</q-item-label>
+                    </q-item-section>
+                </q-item>
+
+                <q-separator />
+                
+                <div class="q-pt-md q-pr-md q-pl-md q-pb-none text-sm text-gray-6">
+                    This is a secure area of the application. Please confirm your password before continuing.
+                </div>
+
+                <q-card-section class="q-pt-sm">
+                    <q-form @submit.prevent="submit">
+                        <q-input 
+                            label="Password" 
+                            type="password" 
+                            v-model="form.password"
+                        >
+                            <template #prepend>
+                                <q-icon name="mdi-key" />
+                            </template>
+                        </q-input>
+
+                        <div class="flex items-center justify-end q-mt-sm">
+                            <q-btn 
+                                label="Confirm" 
+                                color="secondary" 
+                                type="submit" 
+                                :disabled="form.processing"
+                                :class="{ 'opacity-25': form.processing }"
+                            />
+                        </div>
+                    </q-form>
+                </q-card-section>
+            </q-card>
+        </div>
     </div>
-
-    <breeze-validation-errors class="mb-4" />
-
-    <form @submit.prevent="submit">
-        <div>
-            <breeze-label for="password" value="Password" />
-            <breeze-input id="password" type="password" class="mt-1 block w-full" v-model="form.password" required autocomplete="current-password" autofocus />
-        </div>
-
-        <div class="flex justify-end mt-4">
-            <breeze-button class="ml-4" :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
-                Confirm
-            </breeze-button>
-        </div>
-    </form>
 </template>
 
 <script>
-import BreezeButton from '@/Components/Button';
-import BreezeGuestLayout from '@/Layouts/Guest';
-import BreezeInput from '@/Components/Input';
-import BreezeLabel from '@/Components/Label';
-import BreezeValidationErrors from '@/Components/ValidationErrors';
+import Guest from '@/Layouts/Guest';
 
 export default {
-    layout: BreezeGuestLayout,
-
-    components: {
-        BreezeButton,
-        BreezeInput,
-        BreezeLabel,
-        BreezeValidationErrors,
-    },
-
+    layout: Guest,
     props: {
         auth: Object,
         errors: Object,
     },
-
     data() {
         return {
             form: this.$inertia.form({
@@ -48,7 +58,6 @@ export default {
             }),
         };
     },
-
     methods: {
         submit() {
             this.form.post(this.route('password.confirm'), {

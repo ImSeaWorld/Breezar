@@ -1,71 +1,96 @@
 <template>
-    <breeze-validation-errors class="mb-4" />
+    <div class="row justify-center align-center items-center full-height">
+        <div class="col-11 col-md-4 col-lg-3">
+            <q-card flat bordered>
+                <q-item>
+                    <q-item-section>
+                        <q-item-label class="text-center">Reset Password</q-item-label>
+                    </q-item-section>
+                </q-item>
 
-    <form @submit.prevent="submit">
-        <div>
-            <breeze-label for="email" value="Email" />
-            <breeze-input id="email" type="email" class="mt-1 block w-full" v-model="form.email" required autofocus autocomplete="username" />
-        </div>
+                <q-separator />
 
-        <div class="mt-4">
-            <breeze-label for="password" value="Password" />
-            <breeze-input id="password" type="password" class="mt-1 block w-full" v-model="form.password" required autocomplete="new-password" />
-        </div>
+                <q-card-section>
+                    <form @submit.prevent="submit">
+                        <q-input 
+                            label="Email" 
+                            v-model="form.email"
+                            :error="errors.email ? true : null"
+                            :error-message="errors.email"
+                        >
+                            <template #prepend>
+                                <q-icon name="mdi-email" />
+                            </template>
+                        </q-input>
+                        
+                        <q-input 
+                            label="Password" 
+                            type="password" 
+                            v-model="form.password"
+                            :error="errors.password ? true : null"
+                            :error-message="errors.password"
+                        >
+                            <template #prepend>
+                                <q-icon name="mdi-key" />
+                            </template>
+                        </q-input>
+                        
+                        <q-input 
+                            label="Password Confirmation" 
+                            type="password" 
+                            v-model="form.password_confirmation"
+                            :error="errors.password ? true : null"
+                            :error-message="errors.password"
+                        >
+                            <template #prepend>
+                                <q-icon name="mdi-key" />
+                            </template>
+                        </q-input>
 
-        <div class="mt-4">
-            <breeze-label for="password_confirmation" value="Confirm Password" />
-            <breeze-input id="password_confirmation" type="password" class="mt-1 block w-full" v-model="form.password_confirmation" required autocomplete="new-password" />
+                        <div class="flex items-center justify-end q-mt-sm">
+                            <q-btn 
+                                label="Reset Password" 
+                                color="secondary"
+                                type="submit" 
+                                :disabled="form.processing"
+                                :class="{ 'opacity-25': form.processing }"
+                            />
+                        </div>
+                    </form>
+                </q-card-section>
+            </q-card>
         </div>
-
-        <div class="flex items-center justify-end mt-4">
-            <breeze-button :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
-                Reset Password
-            </breeze-button>
-        </div>
-    </form>
+    </div>
 </template>
 
 <script>
-    import BreezeButton from '@/Components/Button'
-    import BreezeGuestLayout from "@/Layouts/Guest"
-    import BreezeInput from '@/Components/Input'
-    import BreezeLabel from '@/Components/Label'
-    import BreezeValidationErrors from '@/Components/ValidationErrors'
+import Guest from '@/Layouts/Guest';
 
-    export default {
-        layout: BreezeGuestLayout,
-
-        components: {
-            BreezeButton,
-            BreezeInput,
-            BreezeLabel,
-            BreezeValidationErrors,
+export default {
+    layout: Guest,
+    props: {
+        auth: Object,
+        email: String,
+        errors: Object,
+        token: String,
+    },
+    data() {
+        return {
+            form: this.$inertia.form({
+                token: this.token,
+                email: this.email,
+                password: '',
+                password_confirmation: '',
+            }),
+        };
+    },
+    methods: {
+        submit() {
+            this.form.post(this.route('password.update'), {
+                onFinish: () =>
+                    this.form.reset('password', 'password_confirmation'),
+            });
         },
-
-        props: {
-            auth: Object,
-            email: String,
-            errors: Object,
-            token: String,
-        },
-
-        data() {
-            return {
-                form: this.$inertia.form({
-                    token: this.token,
-                    email: this.email,
-                    password: '',
-                    password_confirmation: '',
-                })
-            }
-        },
-
-        methods: {
-            submit() {
-                this.form.post(this.route('password.update'), {
-                    onFinish: () => this.form.reset('password', 'password_confirmation'),
-                })
-            }
-        }
-    }
+    },
+};
 </script>

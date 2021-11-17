@@ -19,11 +19,11 @@
 </template>
 
 <script>
-import BreezeAuthenticatedLayout from '@/Layouts/Authenticated';
+import Authenticated from '@/Layouts/Authenticated';
 
 export default {
     components: {
-        BreezeAuthenticatedLayout,
+        Authenticated,
     },
 
     props: {
