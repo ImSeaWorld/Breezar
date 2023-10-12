@@ -9,15 +9,16 @@
 </template>
 
 <script>
-    export default {
-        computed: {
-            errors() {
-                return this.$page.props.errors
-            },
+export default {
+    name: 'ValidationErrors',
+    computed: {
+        errors() {
+            return this.$page.props.errors
+        },
 
-            hasErrors() {
-                return Object.keys(this.errors).length > 0;
-            },
-        }
+        hasErrors() {
+            return Object.keys(this.errors).length > 0;
+        },
     }
+}
 </script>
