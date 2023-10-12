@@ -1,34 +1,47 @@
-window._ = require('lodash');
-window.axios = require('axios');
-window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
-// window.axios.defaults.headers.common['X-CSRF-TOKEN'] = window.Laravel.csrfToken;
-
 // Import modules...
 import { createApp, h } from 'vue';
-import {
-    App as InertiaApp,
-    plugin as InertiaPlugin,
-} from '@inertiajs/inertia-vue3';
-import { InertiaProgress } from '@inertiajs/progress';
+
+import { createInertiaApp, Link } from '@inertiajs/vue3';
+import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 
 import { Quasar } from 'quasar';
-import iconSet from 'quasar/icon-set/mdi-v4.js';
-import '@quasar/extras/mdi-v4/mdi-v4.css';
+import iconSet from 'quasar/icon-set/mdi-v7.js';
+import '@quasar/extras/mdi-v7/mdi-v7.css';
+import 'quasar/dist/quasar.css';
 
-const el = document.getElementById('app');
+import axios from 'axios';
+import VueAxios from 'vue-axios';
 
-createApp({
-    render: () =>
-        h(InertiaApp, {
-            initialPage: JSON.parse(el.dataset.page),
-            resolveComponent: (name) => require(`./Pages/${name}`).default,
-        }),
-})
-    .mixin({ methods: { route } })
-    .use(InertiaPlugin)
-    .use(Quasar, {
-        iconSet: iconSet,
-    })
-    .mount(el);
+axios.defaults.baseURL = import.meta.env.AXIOS_BASE_URL;
+axios.defaults.withCredentials = true;
+axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 
-InertiaProgress.init({ color: '#4B5563' });
+createInertiaApp({
+    progress: {
+        color: '#4B5563',
+    },
+    resolve: async (name) =>
+        resolvePageComponent(
+            `./Pages/${name}.vue`,
+            import.meta.glob('./Pages/**/*.vue'),
+        ),
+    setup({ el, App, props, plugin }) {
+        createApp({ render: () => h(App, props) })
+            .mixin({ 
+                components: { InertiaLink: Link },
+                methods: { route } 
+            })
+            .use(plugin)
+            .use(Quasar, {
+                iconSet: iconSet,
+                config: {
+                    dark: 'auto',
+                    brand: {
+                        secondary: '#f6362e',
+                    }
+                }
+            })
+            .use(VueAxios, axios)
+            .mount(el);
+    }
+});
