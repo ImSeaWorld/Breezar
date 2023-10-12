@@ -24,10 +24,9 @@
                         <div class="flex items-center justify-end q-mt-sm">
                             <q-btn 
                                 label="Resend Verification Email" 
-                                color="secondary"
+                                color="primary"
                                 type="submit" 
-                                :disabled="form.processing"
-                                :class="{ 'opacity-25': form.processing }"
+                                :disable="form.processing"
                             />
                         </div>
                     </q-form>
@@ -38,7 +37,7 @@
 </template>
 
 <script>
-import Guest from '@/Layouts/Guest';
+import Guest from '@/Layouts/Guest.vue';
 
 export default {
     layout: Guest,
