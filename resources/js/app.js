@@ -35,8 +35,9 @@ createInertiaApp({
             .use(Quasar, {
                 iconSet: iconSet,
                 config: {
-                    dark: 'auto',
+                    // dark: 'auto',
                     brand: {
+                        primary: '#5216BE',
                         secondary: '#f6362e',
                     }
                 }
