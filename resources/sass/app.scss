@@ -1,1 +1,51 @@
 // Application Styles
+@import "./colors.scss";
+@import "./guide.scss";
+@import "./style.scss";
+@import "./qbtn.scss";
+
+@import url("https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css");
+@import url("https://fonts.googleapis.com/css?family=Inter:var(--text-2xl-font-bold-font-weight),var(--text-xl-font-semibold-font-weight),var(--text-5xl-font-bold-font-weight),var(--text-sm-font-regular-font-weight),var(--text-base-font-medium-font-weight),600,var(--text-sm-font-semibold-font-weight),var(--text-base-font-regular-font-weight),var(--text-lg-font-medium-font-weight),var(--text-base-font-semibold-font-weight),var(--text-lg-font-semibold-font-weight),var(--text-lg-font-regular-font-weight),500,var(--text-sm-font-medium-font-weight),400,var(--text-3xl-font-bold-font-weight),var(--text-xl-font-bold-font-weight)");
+
+* {
+    -webkit-font-smoothing: antialiased;
+    box-sizing: border-box;
+}
+
+html,
+body {
+    margin: 0px;
+    height: 100vh;
+}
+
+/* a blue color as a generic focus style */
+button:focus-visible {
+    outline: 2px solid #4a90e2 !important;
+    outline: -webkit-focus-ring-color auto 5px !important;
+}
+
+a {
+    text-decoration: none;
+}
+
+@font-face {
+    font-family: "Proxima Nova-Bold";
+    src: url("https://anima-uploads.s3.amazonaws.com/projects/623ec822ecf12f908cda1529/fonts/mark-simonson-proxima-nova-bold.otf") format("opentype");
+}
+
+@font-face {
+    font-family: "Proxima Nova-Semibold";
+    src: url("https://anima-uploads.s3.amazonaws.com/5b92aac3e833790009188215/.173.otf") format("opentype");
+}
+
+.text-underline {
+    text-decoration: underline !important;
+}
+
+.text-no-decoration {
+    text-decoration: none !important;
+}
+
+.display-inline {
+    display: inline !important;
+}

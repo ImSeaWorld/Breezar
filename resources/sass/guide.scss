@@ -1,0 +1,257 @@
+:root {
+    --base900-light: rgba(26, 26, 26, 1);
+    --base700-light-tertiary: rgba(26, 26, 26, 0.7);
+    --secondary-purple200-light: rgba(234, 214, 255, 1);
+    --primary-blue50-light: rgba(242, 247, 255, 1);
+    --primary-blue200-light: rgba(190, 219, 254, 1);
+    --orange50-light: rgba(255, 246, 235, 1);
+    --orange200-light: rgba(254, 214, 169, 1);
+    --base500-light-secondary: rgba(26, 26, 26, 0.5);
+    --base500-dark-secondary: rgba(255, 255, 255, 0.5);
+    --base900-dark: rgba(255, 255, 255, 1);
+    --base700-dark-tertiary: rgba(255, 255, 255, 0.7);
+    --tertiary-gray100-light: rgba(244, 244, 245, 1);
+    --base00-light-primary: rgba(255, 255, 255, 1);
+    --base00-dark-primary: rgba(20, 20, 20, 1);
+    --tertiary-gray100-dark: rgba(51, 51, 51, 1);
+    --tertiary-gray400-dark: rgba(116, 116, 116, 1);
+    --tertiary-gray200-dark: rgba(67, 67, 67, 1);
+    --tertiary-gray50-dark: rgba(39, 39, 39, 1);
+    --primary-blue600-light: rgba(36, 99, 235, 1);
+    --base100-light: rgba(26, 26, 26, 0.1);
+    --tertiary-gray400-light: rgba(161, 161, 170, 1);
+    --base200-light: rgba(26, 26, 26, 0.2);
+    --tertiary-gray50-light: rgba(253, 253, 253, 1);
+    --tertiary-gray200-light: rgba(228, 228, 231, 1);
+    --primary-blue600-dark: rgba(80, 161, 255, 1);
+    --base100-dark: rgba(255, 255, 255, 0.1);
+    --tertiary-gray300-dark: rgba(95, 95, 95, 1);
+    --text-base-font-semibold-font-family: "Inter", Helvetica;
+    --text-base-font-semibold-font-weight: 600;
+    --text-base-font-semibold-font-size: 16px;
+    --text-base-font-semibold-letter-spacing: 0px;
+    --text-base-font-semibold-line-height: 24px;
+    --text-base-font-semibold-font-style: normal;
+    --text-5xl-font-bold-font-family: "Inter", Helvetica;
+    --text-5xl-font-bold-font-weight: 700;
+    --text-5xl-font-bold-font-size: 48px;
+    --text-5xl-font-bold-letter-spacing: 0px;
+    --text-5xl-font-bold-line-height: 58px;
+    --text-5xl-font-bold-font-style: normal;
+    --text-lg-font-regular-font-family: "Inter", Helvetica;
+    --text-lg-font-regular-font-weight: 400;
+    --text-lg-font-regular-font-size: 18px;
+    --text-lg-font-regular-letter-spacing: 0px;
+    --text-lg-font-regular-line-height: 30px;
+    --text-lg-font-regular-font-style: normal;
+    --text-base-font-medium-font-family: "Inter", Helvetica;
+    --text-base-font-medium-font-weight: 500;
+    --text-base-font-medium-font-size: 16px;
+    --text-base-font-medium-letter-spacing: 0px;
+    --text-base-font-medium-line-height: 24px;
+    --text-base-font-medium-font-style: normal;
+    --text-lg-font-medium-font-family: "Inter", Helvetica;
+    --text-lg-font-medium-font-weight: 500;
+    --text-lg-font-medium-font-size: 18px;
+    --text-lg-font-medium-letter-spacing: 0px;
+    --text-lg-font-medium-line-height: 30px;
+    --text-lg-font-medium-font-style: normal;
+    --text-xl-font-bold-font-family: "Inter", Helvetica;
+    --text-xl-font-bold-font-weight: 700;
+    --text-xl-font-bold-font-size: 20px;
+    --text-xl-font-bold-letter-spacing: 0px;
+    --text-xl-font-bold-line-height: 32px;
+    --text-xl-font-bold-font-style: normal;
+    --text-base-font-regular-font-family: "Inter", Helvetica;
+    --text-base-font-regular-font-weight: 400;
+    --text-base-font-regular-font-size: 16px;
+    --text-base-font-regular-letter-spacing: 0px;
+    --text-base-font-regular-line-height: 24px;
+    --text-base-font-regular-font-style: normal;
+    --text-sm-font-regular-font-family: "Inter", Helvetica;
+    --text-sm-font-regular-font-weight: 400;
+    --text-sm-font-regular-font-size: 14px;
+    --text-sm-font-regular-letter-spacing: 0px;
+    --text-sm-font-regular-line-height: 20px;
+    --text-sm-font-regular-font-style: normal;
+    --text-sm-font-medium-font-family: "Inter", Helvetica;
+    --text-sm-font-medium-font-weight: 500;
+    --text-sm-font-medium-font-size: 14px;
+    --text-sm-font-medium-letter-spacing: 0px;
+    --text-sm-font-medium-line-height: 22px;
+    --text-sm-font-medium-font-style: normal;
+    --text-2xl-font-bold-font-family: "Inter", Helvetica;
+    --text-2xl-font-bold-font-weight: 700;
+    --text-2xl-font-bold-font-size: 24px;
+    --text-2xl-font-bold-letter-spacing: 0px;
+    --text-2xl-font-bold-line-height: 34px;
+    --text-2xl-font-bold-font-style: normal;
+    --text-lg-font-semibold-font-family: "Inter", Helvetica;
+    --text-lg-font-semibold-font-weight: 600;
+    --text-lg-font-semibold-font-size: 18px;
+    --text-lg-font-semibold-letter-spacing: 0px;
+    --text-lg-font-semibold-line-height: 30px;
+    --text-lg-font-semibold-font-style: normal;
+    --text-3xl-font-bold-font-family: "Inter", Helvetica;
+    --text-3xl-font-bold-font-weight: 700;
+    --text-3xl-font-bold-font-size: 30px;
+    --text-3xl-font-bold-letter-spacing: 0px;
+    --text-3xl-font-bold-line-height: 42px;
+    --text-3xl-font-bold-font-style: normal;
+    --text-xl-font-semibold-font-family: "Inter", Helvetica;
+    --text-xl-font-semibold-font-weight: 600;
+    --text-xl-font-semibold-font-size: 20px;
+    --text-xl-font-semibold-letter-spacing: 0px;
+    --text-xl-font-semibold-line-height: 32px;
+    --text-xl-font-semibold-font-style: normal;
+    --text-sm-font-semibold-font-family: "Inter", Helvetica;
+    --text-sm-font-semibold-font-weight: 600;
+    --text-sm-font-semibold-font-size: 14px;
+    --text-sm-font-semibold-letter-spacing: 0px;
+    --text-sm-font-semibold-line-height: 22px;
+    --text-sm-font-semibold-font-style: normal;
+    --shadow-shadow-xs-light: 0px 1px 2px 0px rgba(0, 0, 0, 0.05);
+    --shadow-xs: 0px 1px 2px 0px rgba(0, 0, 0, 0.06);
+    --shadow-sm: 0px 1px 3px 0px rgba(0, 0, 0, 0.1);
+    --shadow-shadow-xs-dark: 0px 0.5px 0px 0px rgba(82, 82, 82, 1);
+    --shadow-shadow-sm-light: 0px 1px 3px 0px rgba(0, 0, 0, 0.08);
+    --shadow-shadow-sm-dark: 0px 1px 1px 0px rgba(18, 18, 18, 0.3);
+    --variable-collection-bg: rgba(172, 143, 224, 1);
+    --color-mode-colors-base-700: rgba(26, 26, 26, 0.7);
+    --color-mode-mode-alpha-700: var(--color-mode-colors-base-700);
+    --color-mode-colors-base-900: rgba(26, 26, 26, 1);
+    --color-mode-mode-alpha-900: var(--color-mode-colors-base-900);
+    --color-mode-colors-base-00: rgba(255, 255, 255, 1);
+    --color-mode-mode-base-00: var(--color-mode-colors-base-00);
+    --color-mode-colors-gray-200: rgba(228, 228, 231, 1);
+    --color-mode-mode-base-200: var(--color-mode-colors-gray-200);
+    --color-mode-colors-gray-100: rgba(244, 244, 245, 1);
+    --color-mode-mode-base-100: var(--color-mode-colors-gray-100);
+    --color-mode-colors-gray-50: rgba(252, 252, 252, 1);
+    --color-mode-mode-base-50: var(--color-mode-colors-gray-50);
+    --color-mode-colors-base-200: rgba(26, 26, 26, 0.2);
+    --color-mode-colors-base-100: rgba(26, 26, 26, 0.1);
+    --color-mode-mode-state-disabled: var(--color-mode-colors-base-200);
+    --color-mode-colors-blue-600: rgba(36, 99, 235, 1);
+    --color-mode-colors-pink-600: rgba(219, 41, 121, 1);
+    --color-mode-colors-blue-400: rgba(97, 166, 250, 1);
+    --color-mode-colors-pink-400: rgba(244, 113, 181, 1);
+    --color-mode-colors-blue-500: rgba(52, 121, 233, 1);
+    --color-mode-colors-pink-500: rgba(236, 70, 153, 1);
+    --color-mode-colors-gray-600: rgba(82, 82, 91, 1);
+    --color-mode-mode-base-600: var(--color-mode-colors-gray-600);
+    --color-mode-colors-red-600: rgba(220, 40, 40, 1);
+    --color-mode-mode-state-destructive-active: var(--color-mode-colors-red-600);
+    --color-mode-colors-red-400: rgba(253, 107, 107, 1);
+    --color-mode-mode-state-destructive-selected: var(--color-mode-colors-red-400);
+    --color-mode-colors-red-500: rgba(239, 67, 67, 1);
+    --color-mode-mode-state-destructive-hover: var(--color-mode-colors-red-500);
+    --color-mode-colors-base-400: rgba(26, 26, 26, 0.4);
+    --color-mode-mode-alpha-400: var(--color-mode-colors-base-400);
+    --spacing-space-8: 20px;
+    --spacing-space-5: 10px;
+    --spacing-space-7: 16px;
+    --spacing-space-0: 0px;
+    --spacing-space-6: 12px;
+    --spacing-space-9: 24px;
+    --spacing-space-4: 8px;
+    --spacing-space-2: 2px;
+    --theme-radius-radi-4: 12px;
+    --theme-radius-radi-1: 0px;
+    --theme-brand-active: var(--color-mode-colors-blue-600);
+    --theme-brand-selected: var(--color-mode-colors-blue-400);
+    --theme-brand-hover: var(--color-mode-colors-blue-500);
+    --theme-radius-radi-8: 1000px;
+}
+
+/*
+  
+  To enable a theme in your HTML, simply add one of the following data attributes to an HTML element, like so:
+  
+  <body data-color-mode-mode="light">
+      <!-- the rest of your content -->
+  </body>
+  
+  You can apply the theme on any DOM node, not just the `body`
+  
+  */
+
+[data-color-mode-mode="light"] {
+    --color-mode-colors-base-700: rgba(26, 26, 26, 0.7);
+    --color-mode-colors-base-900: rgba(26, 26, 26, 1);
+    --color-mode-colors-base-00: rgba(255, 255, 255, 1);
+    --color-mode-colors-gray-200: rgba(228, 228, 231, 1);
+    --color-mode-colors-gray-100: rgba(244, 244, 245, 1);
+    --color-mode-colors-gray-50: rgba(252, 252, 252, 1);
+    --color-mode-colors-base-200: rgba(26, 26, 26, 0.2);
+    --color-mode-colors-base-100: rgba(26, 26, 26, 0.1);
+    --color-mode-mode-state-disabled: var(--color-mode-colors-base-200);
+    --color-mode-colors-blue-600: rgba(36, 99, 235, 1);
+    --color-mode-colors-pink-600: rgba(219, 41, 121, 1);
+    --color-mode-colors-blue-400: rgba(97, 166, 250, 1);
+    --color-mode-colors-pink-400: rgba(244, 113, 181, 1);
+    --color-mode-colors-blue-500: rgba(52, 121, 233, 1);
+    --color-mode-colors-pink-500: rgba(236, 70, 153, 1);
+    --color-mode-colors-gray-600: rgba(82, 82, 91, 1);
+    --color-mode-colors-red-600: rgba(220, 40, 40, 1);
+    --color-mode-colors-red-400: rgba(253, 107, 107, 1);
+    --color-mode-colors-red-500: rgba(239, 67, 67, 1);
+    --color-mode-colors-base-400: rgba(26, 26, 26, 0.4);
+}
+
+[data-color-mode-mode="dark"] {
+    --color-mode-colors-base-700: rgba(255, 255, 255, 0.7);
+    --color-mode-colors-base-900: rgba(255, 255, 255, 1);
+    --color-mode-colors-base-00: rgba(20, 20, 20, 1);
+    --color-mode-colors-gray-200: rgba(67, 67, 67, 1);
+    --color-mode-colors-gray-100: rgba(51, 51, 51, 1);
+    --color-mode-colors-gray-50: rgba(27, 24, 24, 1);
+    --color-mode-colors-base-200: rgba(255, 255, 255, 0.2);
+    --color-mode-colors-base-100: rgba(255, 255, 255, 0.1);
+    --color-mode-mode-state-disabled: var(--color-mode-colors-base-100);
+    --color-mode-colors-blue-600: rgba(80, 161, 255, 1);
+    --color-mode-colors-pink-600: rgba(249, 169, 213, 1);
+    --color-mode-colors-blue-400: rgba(53, 122, 234, 1);
+    --color-mode-colors-pink-400: rgba(236, 70, 153, 1);
+    --color-mode-colors-blue-500: rgba(46, 136, 246, 1);
+    --color-mode-colors-pink-500: rgba(244, 113, 181, 1);
+    --color-mode-colors-gray-600: rgba(155, 155, 155, 1);
+    --color-mode-colors-red-600: rgba(255, 147, 147, 1);
+    --color-mode-colors-red-400: rgba(246, 77, 77, 1);
+    --color-mode-colors-red-500: rgba(255, 98, 98, 1);
+    --color-mode-colors-base-400: rgba(255, 255, 255, 0.4);
+}
+
+[data-spacing-mode="compact"] {
+    --spacing-space-8: 20px;
+    --spacing-space-5: 10px;
+    --spacing-space-7: 16px;
+    --spacing-space-6: 12px;
+    --spacing-space-9: 24px;
+    --spacing-space-4: 8px;
+    --spacing-space-2: 2px;
+}
+
+[data-spacing-mode="spacious"] {
+    --spacing-space-8: 24px;
+    --spacing-space-5: 12px;
+    --spacing-space-7: 20px;
+    --spacing-space-6: 16px;
+    --spacing-space-9: 28px;
+    --spacing-space-4: 10px;
+    --spacing-space-2: 4px;
+}
+
+[data-theme-mode="brand-a"] {
+    --theme-radius-radi-4: 12px;
+    --theme-brand-active: var(--color-mode-colors-blue-600);
+    --theme-brand-selected: var(--color-mode-colors-blue-400);
+    --theme-brand-hover: var(--color-mode-colors-blue-500);
+}
+
+[data-theme-mode="brand-b"] {
+    --theme-radius-radi-4: 24px;
+    --theme-brand-active: var(--color-mode-colors-pink-600);
+    --theme-brand-selected: var(--color-mode-colors-pink-400);
+    --theme-brand-hover: var(--color-mode-colors-pink-500);
+}
