@@ -16,7 +16,7 @@ use Inertia\Inertia;
 */
 
 Route::get('/', function () {
-    return Inertia::render('Welcome', [
+    return Inertia::render('Home', [
         'canLogin' => Route::has('login'),
         'canRegister' => Route::has('register'),
         'laravelVersion' => Application::VERSION,
@@ -24,7 +24,19 @@ Route::get('/', function () {
     ]);
 });
 
-Route::get('/dashboard', function () {
+Route::get('premium-domains', function () {
+    return Inertia::render('PremiumDomains');
+});
+
+Route::get('contact', function () {
+    return Inertia::render('Contact');
+});
+
+Route::get('learn', function () {
+    return Inertia::render('Learn');
+});
+
+Route::get('dashboard', function () {
     return Inertia::render('Dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
