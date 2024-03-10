@@ -2,6 +2,8 @@ import { defineConfig } from 'vite';
 import laravel from 'laravel-vite-plugin';
 import vue from '@vitejs/plugin-vue';
 
+import path from 'path';
+
 export default defineConfig(({ command }) => {
     // Load app-level env vars to node-level env vars.
     // process.env = { ...process.env, ...loadEnv(command, process.cwd()) };
@@ -57,6 +59,7 @@ export default defineConfig(({ command }) => {
             alias: {
                 '~': '/resources',
                 '@': '/resources/js',
+                '!': path.resolve(__dirname, 'resources/sass'),
             },
         },
         optimizeDeps: {
@@ -71,7 +74,7 @@ export default defineConfig(({ command }) => {
         css: {
             preprocessorOptions: {
                 scss: {
-                    additionalData: '@import "./node_modules/quasar/src/css/variables.sass";',
+                    additionalData: '@import "./node_modules/quasar/src/css/variables.sass";@import "!/guide.scss";',
                 }
             }
         }
