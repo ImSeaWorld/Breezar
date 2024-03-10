@@ -8,14 +8,14 @@
     <link rel="shortcut icon" href="/favicon.svg">
     <link rel="icon" type="image/png" href="/favicon.svg">
 
-    <title>{{ config('app.name', 'Breezar') }}</title>
+    <title>{{ config('app.name', 'EZ Domains') }}</title>
 
     <!-- Fonts -->
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap">
+    {{-- <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap"> --}}
 
     @routes
 
-    @vite(['resources/js/app.js'])
+    @vite(['resources/js/app.js', 'resources/sass/app.scss'])
 </head>
 
 <body class="font-sans antialiased">
