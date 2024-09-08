@@ -1,6 +1,7 @@
 import { defineConfig } from 'vite';
 import laravel from 'laravel-vite-plugin';
 import vue from '@vitejs/plugin-vue';
+import { quasar, transformAssetUrls } from '@quasar/vite-plugin';
 
 export default defineConfig(({ command }) => {
     // Load app-level env vars to node-level env vars.
@@ -35,11 +36,11 @@ export default defineConfig(({ command }) => {
             }),
             vue({
                 template: {
-                    transformAssetUrls: {
-                        base: null,
-                        includeAbsolute: false,
-                    },
+                    transformAssetUrls
                 },
+            }),
+            quasar({
+                // sassVariables: 'src/quasar-variables.sass'
             }),
             {
                 name: 'blade',
