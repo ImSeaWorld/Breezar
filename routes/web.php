@@ -26,13 +26,15 @@ Route::get('/', function () {
         'canLogin' => Route::has('login'),
         'canRegister' => Route::has('register'),
         'versions' => [
+            'php' => PHP_VERSION,
             'laravel' => Application::VERSION,
-            'inertia' => [
-                'client' => $getPackageVer('@inertiajs/vue3'),
-                'server' => $getComposerVer('inertiajs/inertia-laravel'),
-            ],
             'vue' => [
                 'client' => $getPackageVer('vue'),
+            ],
+            'vite' => [
+                'client' => [
+                    'vite' => $getPackageVer('vite'),
+                ],
             ],
             'quasar' => [
                 'client' => [
@@ -41,12 +43,10 @@ Route::get('/', function () {
                     'vite-plugin' => $getPackageVer('@quasar/vite-plugin'),
                 ],
             ],
-            'vite' => [
-                'client' => [
-                    'vite' => $getPackageVer('vite'),
-                ],
+            'inertia' => [
+                'client' => $getPackageVer('@inertiajs/vue3'),
+                'server' => $getComposerVer('inertiajs/inertia-laravel'),
             ],
-            'php' => PHP_VERSION,
         ],
     ];
 
