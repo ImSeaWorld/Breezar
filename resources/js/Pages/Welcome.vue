@@ -22,7 +22,10 @@
                         </div>
 
                         <div class="text-subtitle1 text-center text-grey-3">
-                            Laravel {{ laravelVersion }} + Inertia v1 + Vue 3 + Quasar v2
+                            Laravel v{{ versions.laravel }} + Inertia {{ versions.inertia.server }}/v{{ versions.inertia.client }} + Vue v{{ versions.vue.client }} + Quasar v{{ versions.quasar.client.quasar }}
+                        </div>
+                        <div class="text-caption">
+                            PHP v{{ versions.php }}
                         </div>
                     </q-card-section>
 
@@ -37,7 +40,7 @@
                                 <q-item-section />
                                 <q-item-section side>
                                     <q-item-label caption>
-                                        Server: ^{{ laravelVersion }}
+                                        Server: v{{ versions.laravel }}
                                         <q-tooltip>
                                             laravel/framework
                                         </q-tooltip>
@@ -75,13 +78,13 @@
                                 <q-item-section />
                                 <q-item-section side>
                                     <q-item-label caption>
-                                        Client: ^1.0.12
+                                        Client: v{{ versions.inertia.client }}
                                         <q-tooltip>
                                             @inertiajs/vue3
                                         </q-tooltip>
                                     </q-item-label>
                                     <q-item-label caption>
-                                        Server: ^0.6.10
+                                        Server: {{ versions.inertia.server }}
                                         <q-tooltip>
                                             @inertiajs/inertia-laravel
                                         </q-tooltip>
@@ -119,7 +122,7 @@
                                 <q-item-section/>
                                 <q-item-section side>
                                     <q-item-label caption>
-                                        Client: ^3.3.4
+                                        Client: v{{ versions.vue.client }}
                                         <q-tooltip>vue</q-tooltip>
                                     </q-item-label>
                                 </q-item-section>
@@ -157,12 +160,16 @@
                                 <q-item-section />
                                 <q-item-section side>
                                     <q-item-label caption>
-                                        Client: ^2.12.7
+                                        Client: v{{ versions.quasar.client.quasar }}
                                         <q-tooltip>quasar</q-tooltip>
                                     </q-item-label>
                                     <q-item-label caption>
-                                        Client(extras): ^1.16.7
+                                        Client(extras): v{{ versions.quasar.client.extras }}
                                         <q-tooltip>@quasar/extras</q-tooltip>
+                                    </q-item-label>
+                                    <q-item-label caption>
+                                        Client(vite-plugin): v{{ versions.quasar.client['vite-plugin'] }}
+                                        <q-tooltip>@quasar/vite-plugin</q-tooltip>
                                     </q-item-label>
                                 </q-item-section>
                                 <q-item-section side>
@@ -215,7 +222,7 @@
                             no-caps
                             color="primary"
                             label="Documentation"
-                            @click="windowOpen('https://laravel.com/docs/9.x')"
+                            @click="windowOpen('https://laravel.com/docs/10.x')"
                         />
                     </q-card-actions>
                 </q-card>
@@ -234,8 +241,7 @@ export default {
         canLogin: Boolean,
         canRegister: Boolean,
         errors: Object,
-        laravelVersion: String,
-        phpVersion: String,
+        versions: Object,
     },
     components: {
         ApplicationLogo,
