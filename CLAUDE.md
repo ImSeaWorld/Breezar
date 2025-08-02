@@ -20,7 +20,8 @@ DB-SCHEMA:
 COMPLETED-FEATURES:
 ✓ Auth: email/pwd+2FA(Google2FA-QR)+profile+session-mgmt
 ✓ Middleware: Check2FA(/2fa/verify), RequireRole(admin/manager)
-✓ FlyApi: GraphQL-wrapper(list/get/scale/logs/deploy/console/metrics/restart/stop/start)+client-specific-tokens+DB-settings-fallback
+✓ FlyApi: GraphQL+REST-hybrid(app-info-via-GraphQL,machines-via-REST)+client-specific-tokens+DB-settings-fallback
+✓ FlyMachinesApi: REST-wrapper(list/get/start/stop/restart/exec/events)+proper-error-handling
 ✓ Jobs: SyncFlyInstances(schedule:everyThirtyMinutes)+client-token-support
 ✓ Layouts: Authenticated.vue(dark-sidebar+role-menus+user-dropdown)
 ✓ Dashboard: stats-cards+recent-activities+clients-table+real-time-refresh
@@ -73,13 +74,13 @@ FIXES-APPLIED:
 ✓ Quasar-notify: added-plugin-import
 
 API-NOTES:
-⚠️ Fly.io-GraphQL: no-official-docs+no-stability-guarantees
+✓ Hybrid-approach: GraphQL-for-app-data+REST-for-machine-operations
+✓ Machines-API: REST-endpoint(https://api.machines.dev/v1)+stable+documented
 ⚠️ Auth-token: must-use-dashboard-token(not-CLI-token)
-⚠️ Machines-API: REST-alternative-more-stable
 ⚠️ Logs: implemented-via-Allocation.recentLogs-but-may-not-return-data
-⚠️ Broken-fields: metrics-not-available-via-GraphQL
-⚠️ Console-sessions: createConsoleSession-mutation-likely-not-available
-⚠️ Alternative: use-fly-ssh-console-or-REST-API-for-console-access
+⚠️ Metrics: not-available-via-GraphQL(empty-array-returned)
+⚠️ Console-sessions: GraphQL-mutation-not-available(consider-exec-endpoint)
+⚠️ Alternative: FlyMachinesApi.execCommand()-for-command-execution
 
 REMAINING-CORE:
 [ ] Email-notifications: password-reset,2FA-setup,critical-alerts
