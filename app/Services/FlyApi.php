@@ -12,6 +12,7 @@ class FlyApi
     protected $apiToken;
     protected $baseUrl = 'https://api.fly.io/graphql';
     protected $orgId;
+    protected $machinesApi;
 
     public function __construct($apiToken = null, $orgId = null)
     {
@@ -31,6 +32,9 @@ class FlyApi
         if (!$this->apiToken) {
             throw new Exception('Fly.io API token not configured. Please set it in Settings or provide client-specific token.');
         }
+        
+        // Initialize Machines API client with same token
+        $this->machinesApi = new FlyMachinesApi($this->apiToken);
     }
 
     /**
@@ -134,6 +138,7 @@ class FlyApi
 
     public function getApp($appName)
     {
+        // Get basic app info from GraphQL
         $query = '
             query GetApp($appName: String!) {
                 app(name: $appName) {
@@ -154,17 +159,6 @@ class FlyApi
                         status
                         createdAt
                     }
-                    machines(active: true, first: 100) {
-                        nodes {
-                            id
-                            name
-                            state
-                            region
-                            config
-                            createdAt
-                        }
-                        totalCount
-                    }
                     volumes {
                         nodes {
                             id
@@ -183,17 +177,41 @@ class FlyApi
         ';
 
         $result = $this->query($query, ['appName' => $appName]);
+        $appData = $result['app'] ?? null;
         
-        // Debug logging to check what's actually returned
-        Log::info('FlyApi getApp response', [
-            'app' => $appName,
-            'has_app' => isset($result['app']),
-            'has_machines' => isset($result['app']['machines']),
-            'machines_structure' => $result['app']['machines'] ?? 'not_found',
-            'machines_count' => isset($result['app']['machines']['nodes']) ? count($result['app']['machines']['nodes']) : 'no_nodes',
-        ]);
+        if (!$appData) {
+            return null;
+        }
         
-        return $result['app'] ?? null;
+        // Get machines from REST API
+        try {
+            $machines = $this->machinesApi->listMachines($appName);
+            
+            // Format machines to match expected structure
+            $appData['machines'] = [
+                'nodes' => $machines,
+                'totalCount' => count($machines)
+            ];
+            
+            Log::info('FlyApi getApp with REST machines', [
+                'app' => $appName,
+                'machines_count' => count($machines),
+                'first_machine' => count($machines) > 0 ? array_keys($machines[0]) : 'no_machines',
+            ]);
+        } catch (Exception $e) {
+            Log::error('Failed to get machines via REST API', [
+                'app' => $appName,
+                'error' => $e->getMessage()
+            ]);
+            
+            // Fallback to empty machines array
+            $appData['machines'] = [
+                'nodes' => [],
+                'totalCount' => 0
+            ];
+        }
+        
+        return $appData;
     }
 
     public function scaleMachine($appName, $machineId, $count = null, $size = null)
@@ -419,65 +437,68 @@ class FlyApi
 
     public function restartMachine($appName, $machineId)
     {
-        $mutation = '
-            mutation RestartMachine($input: RestartMachineInput!) {
-                restartMachine(input: $input) {
-                    machine {
-                        id
-                        state
-                    }
-                }
-            }
-        ';
-
-        return $this->query($mutation, [
-            'input' => [
-                'appId' => $appName,
-                'machineId' => $machineId,
-            ]
-        ]);
+        // Use REST API instead of GraphQL
+        $result = $this->machinesApi->restartMachine($appName, $machineId);
+        
+        if ($result['success']) {
+            // Format response to match expected structure
+            return [
+                'data' => [
+                    'restartMachine' => [
+                        'machine' => [
+                            'id' => $machineId,
+                            'state' => 'restarting'
+                        ]
+                    ]
+                ]
+            ];
+        }
+        
+        throw new Exception('Failed to restart machine: ' . ($result['error'] ?? 'Unknown error'));
     }
 
     public function stopMachine($appName, $machineId)
     {
-        $mutation = '
-            mutation StopMachine($input: StopMachineInput!) {
-                stopMachine(input: $input) {
-                    machine {
-                        id
-                        state
-                    }
-                }
-            }
-        ';
-
-        return $this->query($mutation, [
-            'input' => [
-                'appId' => $appName,
-                'machineId' => $machineId,
-            ]
-        ]);
+        // Use REST API instead of GraphQL
+        $result = $this->machinesApi->stopMachine($appName, $machineId);
+        
+        if ($result['success']) {
+            // Format response to match expected structure
+            return [
+                'data' => [
+                    'stopMachine' => [
+                        'machine' => [
+                            'id' => $machineId,
+                            'state' => 'stopped'
+                        ]
+                    ]
+                ]
+            ];
+        }
+        
+        throw new Exception('Failed to stop machine: ' . ($result['error'] ?? 'Unknown error'));
     }
 
     public function startMachine($appName, $machineId)
     {
-        $mutation = '
-            mutation StartMachine($input: StartMachineInput!) {
-                startMachine(input: $input) {
-                    machine {
-                        id
-                        state
-                    }
-                }
-            }
-        ';
-
-        return $this->query($mutation, [
-            'input' => [
-                'appId' => $appName,
-                'machineId' => $machineId,
-            ]
-        ]);
+        // Use REST API instead of GraphQL
+        $result = $this->machinesApi->startMachine($appName, $machineId);
+        
+        if ($result['success']) {
+            // Format response to match expected structure
+            return [
+                'data' => [
+                    'startMachine' => [
+                        'machine' => [
+                            'id' => $machineId,
+                            'state' => 'started'
+                        ]
+                    ]
+                ]
+            ];
+        }
+        
+        throw new Exception('Failed to start machine: ' . ($result['error'] ?? 'Unknown error'));
     }
 
     public function testConnection()
