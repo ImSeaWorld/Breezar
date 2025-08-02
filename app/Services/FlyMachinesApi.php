@@ -204,7 +204,14 @@ class FlyMachinesApi
         }
 
         try {
-            $result = $this->request('POST', "/apps/{$appName}/machines/{$machineId}/restart", null, $params);
+            // Query params should be passed in the third parameter for GET requests
+            // For POST with query params, we need to format the URL
+            $url = "/apps/{$appName}/machines/{$machineId}/restart";
+            if (!empty($params)) {
+                $url .= '?' . http_build_query($params);
+            }
+            
+            $result = $this->request('POST', $url);
             
             Log::info('Machine restarted', [
                 'app' => $appName,

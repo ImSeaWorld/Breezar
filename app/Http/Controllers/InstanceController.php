@@ -127,7 +127,7 @@ class InstanceController extends Controller
             
             // Get machines for this app
             $flyData = $flyApi->getApp($instance->fly_app_id);
-            $machines = $flyData['data']['app']['machines']['nodes'] ?? [];
+            $machines = $flyData['machines']['nodes'] ?? [];
             
             $restarted = [];
             $failed = [];
@@ -174,7 +174,7 @@ class InstanceController extends Controller
             
             // Get machines for this app
             $flyData = $flyApi->getApp($instance->fly_app_id);
-            $machines = $flyData['data']['app']['machines']['nodes'] ?? [];
+            $machines = $flyData['machines']['nodes'] ?? [];
             
             $stopped = [];
             $failed = [];
@@ -224,7 +224,7 @@ class InstanceController extends Controller
             
             // Get machines for this app
             $flyData = $flyApi->getApp($instance->fly_app_id);
-            $machines = $flyData['data']['app']['machines']['nodes'] ?? [];
+            $machines = $flyData['machines']['nodes'] ?? [];
             
             $started = [];
             $failed = [];
