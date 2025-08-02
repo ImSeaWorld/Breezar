@@ -3,7 +3,6 @@
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
-use App\Http\Controllers\InstanceWebsocketController;
 
 /*
 |--------------------------------------------------------------------------
@@ -40,7 +39,6 @@ Route::middleware(['auth', '2fa'])->group(function () {
     Route::post('/instances/{instance}/stop', [App\Http\Controllers\InstanceController::class, 'stop'])->name('instances.stop');
     Route::post('/instances/{instance}/start', [App\Http\Controllers\InstanceController::class, 'start'])->name('instances.start');
     Route::post('/instances/{instance}/console', [App\Http\Controllers\InstanceController::class, 'console'])->name('instances.console');
-    Route::get('/instances/websocket-details', [InstanceWebsocketController::class, 'getWebsocketDetails'])->name('instances.websocket-details');
     
     // Reports
     Route::get('/reports', [App\Http\Controllers\ReportController::class, 'index'])->name('reports.index');
