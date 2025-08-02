@@ -186,31 +186,48 @@
 
                     <!-- Logs -->
                     <q-card class="q-mt-md">
-                        <q-card-section>
-                            <div class="text-h6 q-mb-md">Recent Logs</div>
+                        <q-card-section class="q-pa-none">
+                            <q-tabs v-model="logsTab" dense class="text-grey" active-color="primary" indicator-color="primary" align="left">
+                                <q-tab name="static" label="Recent Logs" />
+                                <q-tab name="live" label="Live Logs (Beta)" />
+                            </q-tabs>
                             
-                            <div class="log-container q-pa-sm bg-grey-10 text-white" style="height: 300px; overflow-y: auto; font-family: monospace; font-size: 12px;">
-                                <div v-for="(log, index) in logs" :key="index" class="log-line">
-                                    <span class="text-grey-5">{{ formatLogTimestamp(log.timestamp) }}</span>
-                                    <span :class="getLogLevelClass(log.level)">[{{ log.level }}]</span>
-                                    <span class="text-cyan-3">[{{ log.allocationIdShort || log.instanceId }}]</span>
-                                    {{ log.message }}
-                                </div>
-                                <div v-if="!logs || logs.length === 0" class="text-grey-5">
-                                    <div>No logs available</div>
-                                    <div class="text-caption q-mt-sm">
-                                        This could be because:
-                                        <ul class="q-mt-xs q-mb-none q-pl-md">
-                                            <li>The app has no recent activity</li>
-                                            <li>Logs are not available via GraphQL API</li>
-                                            <li>The app uses a different logging mechanism</li>
-                                        </ul>
-                                        <div class="q-mt-sm">
-                                            Try: <code>fly logs -a {{ instance.fly_app_id }}</code>
+                            <q-separator />
+                            
+                            <q-tab-panels v-model="logsTab" animated>
+                                <q-tab-panel name="static" class="q-pa-md">
+                                    <div class="log-container q-pa-sm bg-grey-10 text-white" style="height: 300px; overflow-y: auto; font-family: monospace; font-size: 12px;">
+                                        <div v-for="(log, index) in logs" :key="index" class="log-line">
+                                            <span class="text-grey-5">{{ formatLogTimestamp(log.timestamp) }}</span>
+                                            <span :class="getLogLevelClass(log.level)">[{{ log.level }}]</span>
+                                            <span class="text-cyan-3">[{{ log.allocationIdShort || log.instanceId }}]</span>
+                                            {{ log.message }}
+                                        </div>
+                                        <div v-if="!logs || logs.length === 0" class="text-grey-5">
+                                            <div>No logs available</div>
+                                            <div class="text-caption q-mt-sm">
+                                                This could be because:
+                                                <ul class="q-mt-xs q-mb-none q-pl-md">
+                                                    <li>The app has no recent activity</li>
+                                                    <li>Logs are not available via GraphQL API</li>
+                                                    <li>The app uses a different logging mechanism</li>
+                                                </ul>
+                                                <div class="q-mt-sm">
+                                                    Try: <code>fly logs -a {{ instance.fly_app_id }}</code>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                            </div>
+                                </q-tab-panel>
+                                
+                                <q-tab-panel name="live" class="q-pa-none" style="height: 400px;">
+                                    <FlyLogsWebsocket
+                                        v-if="logsTab === 'live'"
+                                        :app-name="instance.fly_app_id"
+                                        :api-token="flyApiToken"
+                                    />
+                                </q-tab-panel>
+                            </q-tab-panels>
                         </q-card-section>
                     </q-card>
 
@@ -318,11 +335,13 @@
 <script>
 import AuthenticatedLayout from '@/Layouts/Authenticated.vue';
 import { Link } from '@inertiajs/vue3';
+import FlyLogsWebsocket from '@/Components/FlyLogsWebsocket.vue';
 
 export default {
     components: {
         AuthenticatedLayout,
         Link,
+        FlyLogsWebsocket,
     },
 
     props: {
@@ -338,6 +357,8 @@ export default {
             showStopDialog: false,
             showStartDialog: false,
             actionLoading: false,
+            logsTab: 'static',
+            flyApiToken: this.$page.props.auth.user.fly_api_token || '',
             machineColumns: [
                 { name: 'id', label: 'Machine ID', field: 'id', align: 'left' },
                 { name: 'state', label: 'State', field: 'state', align: 'center' },
