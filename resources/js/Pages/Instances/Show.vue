@@ -215,28 +215,138 @@
                     </q-card>
 
                     <!-- Metrics -->
-                    <q-card class="q-mt-md" v-if="false">
+                    <q-card class="q-mt-md" v-if="metrics">
                         <q-card-section>
-                            <div class="text-h6 q-mb-md">Metrics</div>
+                            <div class="row items-center justify-between q-mb-md">
+                                <div class="text-h6">Metrics</div>
+                                <div>
+                                    <q-btn
+                                        flat
+                                        dense
+                                        icon="mdi-refresh"
+                                        @click="refreshMetrics"
+                                        :loading="metricsLoading"
+                                    />
+                                    <q-btn
+                                        flat
+                                        dense
+                                        icon="mdi-open-in-new"
+                                        @click="openGrafana"
+                                        title="Open in Grafana"
+                                    />
+                                </div>
+                            </div>
                             
-                            <div class="row q-col-gutter-md">
-                                <div class="col-6">
+                            <!-- Current Metrics Summary -->
+                            <div class="row q-col-gutter-md q-mb-md" v-if="!metrics.error">
+                                <div class="col-12 col-sm-6 col-md-3">
                                     <q-card flat bordered>
-                                        <q-card-section>
-                                            <div class="text-subtitle2">CPU Usage</div>
-                                            <div class="text-h4">{{ formatMetric(metrics.cpu) }}%</div>
+                                        <q-card-section class="text-center">
+                                            <div class="text-subtitle2 text-grey-7">CPU Usage</div>
+                                            <div class="text-h4 text-primary">{{ formatCpuMetric(metrics.cpu) }}%</div>
                                         </q-card-section>
                                     </q-card>
                                 </div>
-                                <div class="col-6">
+                                <div class="col-12 col-sm-6 col-md-3">
                                     <q-card flat bordered>
-                                        <q-card-section>
-                                            <div class="text-subtitle2">Memory Usage</div>
-                                            <div class="text-h4">{{ formatMetric(metrics.memory) }}%</div>
+                                        <q-card-section class="text-center">
+                                            <div class="text-subtitle2 text-grey-7">Memory Usage</div>
+                                            <div class="text-h4 text-primary">{{ formatMemoryMetric(metrics.memory) }}%</div>
+                                        </q-card-section>
+                                    </q-card>
+                                </div>
+                                <div class="col-12 col-sm-6 col-md-3">
+                                    <q-card flat bordered>
+                                        <q-card-section class="text-center">
+                                            <div class="text-subtitle2 text-grey-7">Network In</div>
+                                            <div class="text-h4 text-positive">{{ formatNetworkMetric(metrics.network?.rx) }}</div>
+                                        </q-card-section>
+                                    </q-card>
+                                </div>
+                                <div class="col-12 col-sm-6 col-md-3">
+                                    <q-card flat bordered>
+                                        <q-card-section class="text-center">
+                                            <div class="text-subtitle2 text-grey-7">Network Out</div>
+                                            <div class="text-h4 text-warning">{{ formatNetworkMetric(metrics.network?.tx) }}</div>
                                         </q-card-section>
                                     </q-card>
                                 </div>
                             </div>
+                            
+                            <div v-else class="text-negative q-pa-md text-center">
+                                <q-icon name="mdi-alert-circle" size="24px" class="q-mr-sm" />
+                                {{ metrics.error }}
+                            </div>
+                            
+                            <!-- Metrics Charts -->
+                            <q-tabs v-model="metricsTab" dense align="left" class="text-grey-7">
+                                <q-tab name="cpu" label="CPU" />
+                                <q-tab name="memory" label="Memory" />
+                                <q-tab name="network" label="Network" />
+                                <q-tab name="http" label="HTTP" />
+                            </q-tabs>
+                            
+                            <q-separator />
+                            
+                            <q-tab-panels v-model="metricsTab" animated>
+                                <q-tab-panel name="cpu">
+                                    <MetricsChart
+                                        title="CPU Usage"
+                                        metric="cpu"
+                                        :instance-id="instance.id"
+                                        unit="%"
+                                        color="#1976d2"
+                                    />
+                                </q-tab-panel>
+                                
+                                <q-tab-panel name="memory">
+                                    <MetricsChart
+                                        title="Memory Usage"
+                                        metric="memory"
+                                        :instance-id="instance.id"
+                                        unit="%"
+                                        color="#388e3c"
+                                    />
+                                </q-tab-panel>
+                                
+                                <q-tab-panel name="network">
+                                    <div class="q-gutter-md">
+                                        <MetricsChart
+                                            title="Network Received"
+                                            metric="network_rx"
+                                            :instance-id="instance.id"
+                                            unit="bytes"
+                                            color="#00897b"
+                                        />
+                                        <MetricsChart
+                                            title="Network Sent"
+                                            metric="network_tx"
+                                            :instance-id="instance.id"
+                                            unit="bytes"
+                                            color="#f57c00"
+                                        />
+                                    </div>
+                                </q-tab-panel>
+                                
+                                <q-tab-panel name="http">
+                                    <div class="q-gutter-md">
+                                        <MetricsChart
+                                            title="HTTP Requests"
+                                            metric="http_requests"
+                                            :instance-id="instance.id"
+                                            unit="requests"
+                                            color="#7b1fa2"
+                                        />
+                                        <MetricsChart
+                                            title="HTTP Errors (5xx)"
+                                            metric="http_errors"
+                                            :instance-id="instance.id"
+                                            unit="requests"
+                                            color="#d32f2f"
+                                        />
+                                    </div>
+                                </q-tab-panel>
+                            </q-tab-panels>
                         </q-card-section>
                     </q-card>
                 </div>
@@ -318,11 +428,13 @@
 <script>
 import AuthenticatedLayout from '@/Layouts/Authenticated.vue';
 import { Link } from '@inertiajs/vue3';
+import MetricsChart from '@/Components/MetricsChart.vue';
 
 export default {
     components: {
         AuthenticatedLayout,
         Link,
+        MetricsChart,
     },
 
     props: {
@@ -338,6 +450,9 @@ export default {
             showStopDialog: false,
             showStartDialog: false,
             actionLoading: false,
+            metricsLoading: false,
+            metricsTab: 'cpu',
+            grafanaUrls: null,
             machineColumns: [
                 { name: 'id', label: 'Machine ID', field: 'id', align: 'left' },
                 { name: 'state', label: 'State', field: 'state', align: 'center' },
@@ -479,6 +594,74 @@ export default {
                     this.actionLoading = false;
                 },
             });
+        },
+        
+        formatCpuMetric(cpuData) {
+            if (!cpuData || cpuData.length === 0) return '0.0';
+            return (cpuData[0]?.value || 0).toFixed(1);
+        },
+        
+        formatMemoryMetric(memoryData) {
+            if (!memoryData || !memoryData.percentage) return '0.0';
+            return memoryData.percentage.toFixed(1);
+        },
+        
+        formatNetworkMetric(networkData) {
+            if (!networkData || networkData.length === 0) return '0 B/s';
+            const bytesPerSec = networkData[0]?.value || 0;
+            return this.formatBytes(bytesPerSec) + '/s';
+        },
+        
+        formatBytes(bytes) {
+            if (bytes === 0) return '0 B';
+            const k = 1024;
+            const sizes = ['B', 'KB', 'MB', 'GB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+        },
+        
+        async refreshMetrics() {
+            this.metricsLoading = true;
+            
+            try {
+                const response = await fetch(route('instances.metrics', this.instance.id));
+                if (!response.ok) {
+                    throw new Error('Failed to fetch metrics');
+                }
+                
+                this.metrics = await response.json();
+            } catch (error) {
+                this.$q.notify({
+                    type: 'negative',
+                    message: 'Failed to refresh metrics',
+                });
+            } finally {
+                this.metricsLoading = false;
+            }
+        },
+        
+        async openGrafana() {
+            if (!this.grafanaUrls) {
+                // Fetch Grafana URLs if not already loaded
+                try {
+                    const response = await fetch(route('instances.grafana-urls', this.instance.id));
+                    if (!response.ok) {
+                        throw new Error('Failed to fetch Grafana URLs');
+                    }
+                    
+                    this.grafanaUrls = await response.json();
+                } catch (error) {
+                    this.$q.notify({
+                        type: 'negative',
+                        message: 'Failed to get Grafana URL',
+                    });
+                    return;
+                }
+            }
+            
+            if (this.grafanaUrls?.dashboard) {
+                window.open(this.grafanaUrls.dashboard, '_blank');
+            }
         },
 
     },

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\ClientInstance;
 use App\Models\ActivityLog;
 use App\Services\FlyApi;
+use App\Services\FlyMetricsApi;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
@@ -94,8 +95,17 @@ class InstanceController extends Controller
                 'logs_sample' => is_array($logs) && count($logs) > 0 ? array_slice($logs, 0, 2) : 'no_logs',
             ]);
             
-            // Get metrics if available
-            $metrics = $flyApi->getMetrics($instance->fly_app_id);
+            // Get metrics from Prometheus API
+            try {
+                $metricsApi = FlyMetricsApi::forClient($instance->client);
+                $metrics = $metricsApi->getAppMetrics($instance->fly_app_id, '5m');
+            } catch (\Exception $e) {
+                Log::error('Failed to fetch metrics', [
+                    'app' => $instance->fly_app_id,
+                    'error' => $e->getMessage()
+                ]);
+                $metrics = null;
+            }
         } catch (\Exception $e) {
             $machines = [];
             $logs = null;

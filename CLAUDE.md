@@ -22,11 +22,14 @@ COMPLETED-FEATURES:
 ✓ Middleware: Check2FA(/2fa/verify), RequireRole(admin/manager)
 ✓ FlyApi: GraphQL+REST-hybrid(app-info-via-GraphQL,machines-via-REST)+client-specific-tokens+DB-settings-fallback
 ✓ FlyMachinesApi: REST-wrapper(list/get/start/stop/restart/exec/events)+proper-error-handling
+✓ FlyMetricsApi: Prometheus-API-wrapper(instant/range-queries)+built-in-metrics+caching
+✓ MetricsController: real-time-metrics+time-series+Grafana-URLs
+✓ MetricsChart: Vue-component(Chart.js-integration)+multi-duration+auto-refresh
 ✓ Jobs: SyncFlyInstances(schedule:everyThirtyMinutes)+client-token-support
 ✓ Layouts: Authenticated.vue(dark-sidebar+role-menus+user-dropdown)
 ✓ Dashboard: stats-cards+recent-activities+clients-table+real-time-refresh
 ✓ Clients: Index(search+filter+paginate)/Create/Show(instances+reports+activities)/Edit(+token-management)
-✓ Instances: Index(filters+quick-actions)/Show(machines+logs)/restart/stop/start+client-token-aware [console-not-available-via-API]
+✓ Instances: Index(filters+quick-actions)/Show(machines+logs+real-time-metrics+charts)/restart/stop/start+client-token-aware [console-not-available-via-API]
 ✓ Reports: Index/Show/Generate(usage/performance/work_items/custom)+Components/{Type}Report.vue
 ✓ Users: Index(search+role-filter)/Create/Show(login-history+activities)/Edit(2FA-reset)
 ✓ Scripts: Index/Create/Show(execute+history)/Edit+CodeMirror(PHP-syntax)
@@ -74,11 +77,13 @@ FIXES-APPLIED:
 ✓ Quasar-notify: added-plugin-import
 
 API-NOTES:
-✓ Hybrid-approach: GraphQL-for-app-data+REST-for-machine-operations
+✓ Hybrid-approach: GraphQL-for-app-data+REST-for-machine-operations+Prometheus-for-metrics
 ✓ Machines-API: REST-endpoint(https://api.machines.dev/v1)+stable+documented
-⚠️ Auth-token: must-use-dashboard-token(not-CLI-token)
-⚠️ Logs: implemented-via-Allocation.recentLogs-but-may-not-return-data
-⚠️ Metrics: not-available-via-GraphQL(empty-array-returned)
+✓ Metrics-API: Prometheus-endpoint(https://api.fly.io/prometheus/)+VictoriaMetrics-backend
+✓ Available-metrics: CPU/memory/network/HTTP/volume+15s-scrape-interval
+✓ Grafana-integration: fly-metrics.net+preconfigured-dashboards
+⚠️ Auth-token: must-use-dashboard-token(not-CLI-token)+FlyV1-format-for-metrics
+⚠️ Logs: GraphQL-via-Allocation.recentLogs(limited)+Grafana-search(30-day-retention)
 ⚠️ Console-sessions: GraphQL-mutation-not-available(consider-exec-endpoint)
 ⚠️ Alternative: FlyMachinesApi.execCommand()-for-command-execution
 
