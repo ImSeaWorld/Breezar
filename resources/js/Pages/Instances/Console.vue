@@ -5,6 +5,7 @@
                 <div>
                     <div class="text-h5">Console: {{ instance.fly_app_id }}</div>
                     <div class="text-caption text-grey-7">
+                        Machine: {{ machineId }} |
                         <Link :href="route('instances.show', instance.id)" class="text-primary">
                             Back to Instance
                         </Link>
@@ -18,7 +19,20 @@
                         <template v-slot:avatar>
                             <q-icon name="mdi-alert" />
                         </template>
-                        Failed to create console session. Please try again.
+                        <div>
+                            <div>Console sessions are not currently available</div>
+                            <div class="text-caption q-mt-sm">
+                                The Fly.io GraphQL API does not support console sessions. To access the console:
+                                <ul class="q-mt-xs q-mb-none">
+                                    <li>Use the Fly CLI: <code>fly ssh console -a {{ instance.fly_app_id }}</code></li>
+                                    <li>Access via the Fly.io dashboard</li>
+                                    <li>Consider implementing REST API integration for console access</li>
+                                </ul>
+                                <div class="q-mt-sm">
+                                    Machine ID: <code>{{ machineId }}</code>
+                                </div>
+                            </div>
+                        </div>
                     </q-banner>
                 </q-card-section>
 
@@ -58,6 +72,7 @@ export default {
 
     props: {
         instance: Object,
+        machineId: String,
         consoleUrl: String,
     },
 

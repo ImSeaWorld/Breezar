@@ -264,6 +264,14 @@ class FlyApi
                 'range' => 3600  // Last hour of logs
             ]);
 
+            Log::info('FlyApi getLogs response', [
+                'app' => $appName,
+                'has_app' => isset($data['app']),
+                'has_allocations' => isset($data['app']['allocations']),
+                'allocations_count' => isset($data['app']['allocations']) ? count($data['app']['allocations']) : 'no_allocations',
+                'first_allocation' => isset($data['app']['allocations'][0]) ? array_keys($data['app']['allocations'][0]) : 'no_first_allocation',
+            ]);
+
             $allocations = $data['app']['allocations'] ?? [];
             $allLogs = [];
 
@@ -274,6 +282,14 @@ class FlyApi
                 }
                 
                 $logs = $allocation['recentLogs'] ?? [];
+                
+                Log::info('FlyApi allocation logs', [
+                    'allocation_id' => $allocation['id'],
+                    'has_recentLogs' => isset($allocation['recentLogs']),
+                    'logs_count' => count($logs),
+                    'first_log' => count($logs) > 0 ? $logs[0] : 'no_logs'
+                ]);
+                
                 foreach ($logs as $log) {
                     // Add allocation context to log entry
                     $log['allocationId'] = $allocation['id'];
@@ -293,6 +309,12 @@ class FlyApi
             if (count($allLogs) > $limit) {
                 $allLogs = array_slice($allLogs, 0, $limit);
             }
+
+            Log::info('FlyApi getLogs final result', [
+                'app' => $appName,
+                'total_logs' => count($allLogs),
+                'first_log_keys' => count($allLogs) > 0 ? array_keys($allLogs[0]) : 'no_logs'
+            ]);
 
             return $allLogs;
             
@@ -330,27 +352,49 @@ class FlyApi
 
     public function createConsoleSession($appName, $machineId = null)
     {
-        $mutation = '
-            mutation CreateConsoleSession($input: CreateConsoleSessionInput!) {
-                createConsoleSession(input: $input) {
-                    consoleSession {
-                        id
-                        url
-                        expiresAt
+        // Note: Console sessions via GraphQL are not well documented
+        // This is an attempt based on common patterns, but may not work
+        // Consider using fly ssh console command or REST API instead
+        
+        try {
+            $mutation = '
+                mutation CreateConsoleSession($input: CreateConsoleSessionInput!) {
+                    createConsoleSession(input: $input) {
+                        consoleSession {
+                            id
+                            url
+                            expiresAt
+                        }
                     }
                 }
+            ';
+
+            $input = [
+                'appId' => $appName,
+            ];
+
+            if ($machineId) {
+                $input['machineId'] = $machineId;
             }
-        ';
 
-        $input = [
-            'appId' => $appName,
-        ];
-
-        if ($machineId) {
-            $input['machineId'] = $machineId;
+            $result = $this->query($mutation, ['input' => $input]);
+            
+            Log::info('CreateConsoleSession mutation result', [
+                'input' => $input,
+                'result' => $result
+            ]);
+            
+            return $result;
+        } catch (\Exception $e) {
+            Log::error('CreateConsoleSession failed', [
+                'error' => $e->getMessage(),
+                'app' => $appName,
+                'machine' => $machineId
+            ]);
+            
+            // Return empty result instead of throwing
+            return [];
         }
-
-        return $this->query($mutation, ['input' => $input]);
     }
 
     public function getMetrics($appName, $metric = 'cpu', $period = '1h')

@@ -117,6 +117,15 @@
 
                 <!-- Machines & Metrics -->
                 <div class="col-12 col-md-8">
+                    <!-- Console Access Info -->
+                    <q-banner class="bg-info text-white q-mb-md" icon="mdi-information">
+                        <div class="text-weight-medium">Console Access</div>
+                        <div class="text-caption">
+                            Direct console access is not available through the Fly.io GraphQL API. 
+                            Use the Fly CLI command: <code class="text-white">fly ssh console -a {{ instance.fly_app_id }}</code>
+                        </div>
+                    </q-banner>
+                    
                     <!-- Machines -->
                     <q-card>
                         <q-card-section>
@@ -154,28 +163,59 @@
                                         {{ formatDate(props.row.createdAt) }}
                                     </q-td>
                                 </template>
+                                <template v-slot:body-cell-actions="props">
+                                    <q-td :props="props">
+                                        <q-btn
+                                            size="sm"
+                                            flat
+                                            dense
+                                            icon="mdi-console"
+                                            color="grey"
+                                            disable
+                                        >
+                                            <q-tooltip>
+                                                Console not available via API<br>
+                                                Use: fly ssh console -a {{ instance.fly_app_id }}
+                                            </q-tooltip>
+                                        </q-btn>
+                                    </q-td>
+                                </template>
                             </q-table>
                         </q-card-section>
                     </q-card>
 
                     <!-- Logs -->
-                    <q-card class="q-mt-md" v-if="logs">
+                    <q-card class="q-mt-md">
                         <q-card-section>
                             <div class="text-h6 q-mb-md">Recent Logs</div>
                             
                             <div class="log-container q-pa-sm bg-grey-10 text-white" style="height: 300px; overflow-y: auto; font-family: monospace; font-size: 12px;">
                                 <div v-for="(log, index) in logs" :key="index" class="log-line">
-                                    {{ log }}
+                                    <span class="text-grey-5">{{ formatLogTimestamp(log.timestamp) }}</span>
+                                    <span :class="getLogLevelClass(log.level)">[{{ log.level }}]</span>
+                                    <span class="text-cyan-3">[{{ log.allocationIdShort || log.instanceId }}]</span>
+                                    {{ log.message }}
                                 </div>
                                 <div v-if="!logs || logs.length === 0" class="text-grey-5">
-                                    No logs available
+                                    <div>No logs available</div>
+                                    <div class="text-caption q-mt-sm">
+                                        This could be because:
+                                        <ul class="q-mt-xs q-mb-none q-pl-md">
+                                            <li>The app has no recent activity</li>
+                                            <li>Logs are not available via GraphQL API</li>
+                                            <li>The app uses a different logging mechanism</li>
+                                        </ul>
+                                        <div class="q-mt-sm">
+                                            Try: <code>fly logs -a {{ instance.fly_app_id }}</code>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </q-card-section>
                     </q-card>
 
                     <!-- Metrics -->
-                    <q-card class="q-mt-md" v-if="metrics">
+                    <q-card class="q-mt-md" v-if="false">
                         <q-card-section>
                             <div class="text-h6 q-mb-md">Metrics</div>
                             
@@ -316,6 +356,23 @@ export default {
             return value ? value.toFixed(2) : '0.00';
         },
 
+        formatLogTimestamp(timestamp) {
+            if (!timestamp) return '';
+            const date = new Date(timestamp);
+            return date.toTimeString().split(' ')[0]; // HH:MM:SS format
+        },
+
+        getLogLevelClass(level) {
+            const classes = {
+                'error': 'text-red',
+                'warn': 'text-orange',
+                'warning': 'text-orange',
+                'info': 'text-blue',
+                'debug': 'text-grey-6',
+            };
+            return classes[level?.toLowerCase()] || 'text-white';
+        },
+
         getStatusColor(status) {
             const colors = {
                 'running': 'positive',
@@ -424,12 +481,14 @@ export default {
             });
         },
 
-        openConsole() {
-            this.$inertia.visit(route('instances.console', this.instance.id));
-        },
     },
 
     mounted() {
+        // Debug logging for logs
+        console.log('Instance Show mounted - logs:', this.logs);
+        console.log('Instance Show mounted - logs type:', typeof this.logs);
+        console.log('Instance Show mounted - logs count:', this.logs ? this.logs.length : 'null/undefined');
+        
         // Check for flash error messages when component loads
         const errorMessage = this.$page.props.flash?.error;
         if (errorMessage) {

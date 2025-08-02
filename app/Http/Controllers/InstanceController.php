@@ -6,6 +6,7 @@ use App\Models\ClientInstance;
 use App\Models\ActivityLog;
 use App\Services\FlyApi;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
 
 class InstanceController extends Controller
@@ -85,6 +86,13 @@ class InstanceController extends Controller
             
             // Get recent logs from allocations
             $logs = $flyApi->getLogs($instance->fly_app_id, null, 50);
+            
+            // Debug logging for logs
+            Log::info('InstanceController logs debug', [
+                'app' => $instance->fly_app_id,
+                'logs_count' => is_array($logs) ? count($logs) : 'not_array',
+                'logs_sample' => is_array($logs) && count($logs) > 0 ? array_slice($logs, 0, 2) : 'no_logs',
+            ]);
             
             // Get metrics if available
             $metrics = $flyApi->getMetrics($instance->fly_app_id);
@@ -253,7 +261,7 @@ class InstanceController extends Controller
         }
     }
 
-    public function console(ClientInstance $instance)
+    public function console(Request $request, ClientInstance $instance)
     {
         // Check access
         if (auth()->user()->role === 'manager' && !auth()->user()->clients->contains($instance->client_id)) {
@@ -264,16 +272,40 @@ class InstanceController extends Controller
             // Create FlyApi instance for this client
             $flyApi = $this->getFlyApiForInstance($instance);
             
-            // Get first available machine
-            $flyData = $flyApi->getApp($instance->fly_app_id);
-            $machines = $flyData['data']['app']['machines']['nodes'] ?? [];
+            // Get machine ID from request or use first available
+            $machineId = $request->get('machine_id');
             
-            if (empty($machines)) {
-                throw new \Exception('No machines available for console access');
+            if (!$machineId) {
+                // Get first available machine as fallback
+                $flyData = $flyApi->getApp($instance->fly_app_id);
+                $machines = $flyData['machines']['nodes'] ?? [];
+                
+                if (empty($machines)) {
+                    throw new \Exception('No machines available for console access');
+                }
+                
+                $machineId = $machines[0]['id'];
             }
-
-            $machineId = $machines[0]['id'];
+            
             $consoleSession = $flyApi->createConsoleSession($instance->fly_app_id, $machineId);
+            
+            // Debug logging
+            Log::info('Console session response', [
+                'app' => $instance->fly_app_id,
+                'machine_id' => $machineId,
+                'response' => $consoleSession,
+                'has_data' => isset($consoleSession['data']),
+                'has_createConsoleSession' => isset($consoleSession['data']['createConsoleSession']),
+                'console_url' => $consoleSession['data']['createConsoleSession']['url'] ?? 'not_found'
+            ]);
+            
+            // Extract the console URL
+            $consoleUrl = null;
+            if (isset($consoleSession['createConsoleSession']['consoleSession']['url'])) {
+                $consoleUrl = $consoleSession['createConsoleSession']['consoleSession']['url'];
+            } elseif (isset($consoleSession['createConsoleSession']['url'])) {
+                $consoleUrl = $consoleSession['createConsoleSession']['url'];
+            }
             
             ActivityLog::log('instance_console_accessed', 'instance', $instance->id, [
                 'instance_name' => $instance->fly_app_id,
@@ -282,7 +314,8 @@ class InstanceController extends Controller
 
             return Inertia::render('Instances/Console', [
                 'instance' => $instance,
-                'consoleUrl' => $consoleSession['data']['createConsoleSession']['url'] ?? null
+                'machineId' => $machineId,
+                'consoleUrl' => $consoleUrl
             ]);
         } catch (\Exception $e) {
             ActivityLog::log('instance_console_failed', 'instance', $instance->id, [

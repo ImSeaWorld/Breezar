@@ -25,7 +25,7 @@ COMPLETED-FEATURES:
 ✓ Layouts: Authenticated.vue(dark-sidebar+role-menus+user-dropdown)
 ✓ Dashboard: stats-cards+recent-activities+clients-table+real-time-refresh
 ✓ Clients: Index(search+filter+paginate)/Create/Show(instances+reports+activities)/Edit(+token-management)
-✓ Instances: Index(filters+quick-actions)/Show(machines+logs+metrics)/restart/stop/start/console(iframe)+client-token-aware
+✓ Instances: Index(filters+quick-actions)/Show(machines+logs)/restart/stop/start+client-token-aware [console-not-available-via-API]
 ✓ Reports: Index/Show/Generate(usage/performance/work_items/custom)+Components/{Type}Report.vue
 ✓ Users: Index(search+role-filter)/Create/Show(login-history+activities)/Edit(2FA-reset)
 ✓ Scripts: Index/Create/Show(execute+history)/Edit+CodeMirror(PHP-syntax)
@@ -76,8 +76,10 @@ API-NOTES:
 ⚠️ Fly.io-GraphQL: no-official-docs+no-stability-guarantees
 ⚠️ Auth-token: must-use-dashboard-token(not-CLI-token)
 ⚠️ Machines-API: REST-alternative-more-stable
-✓ Fixed-logs: now-using-Allocation.recentLogs(limit,range)-GraphQL-field
-⚠️ Broken-fields: metrics+console-session-not-in-standard-GraphQL
+⚠️ Logs: implemented-via-Allocation.recentLogs-but-may-not-return-data
+⚠️ Broken-fields: metrics-not-available-via-GraphQL
+⚠️ Console-sessions: createConsoleSession-mutation-likely-not-available
+⚠️ Alternative: use-fly-ssh-console-or-REST-API-for-console-access
 
 REMAINING-CORE:
 [ ] Email-notifications: password-reset,2FA-setup,critical-alerts
