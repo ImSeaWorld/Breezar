@@ -72,7 +72,16 @@ class InstanceController extends Controller
             
             // Fetch real-time data from Fly.io
             $flyData = $flyApi->getApp($instance->fly_app_id);
-            $machines = $flyData['data']['app']['machines']['nodes'] ?? [];
+            $machines = $flyData['machines']['nodes'] ?? [];
+            
+            // Debug logging for machines data
+            Log::info('InstanceController machines debug', [
+                'app' => $instance->fly_app_id,
+                'flyData_structure' => array_keys($flyData ?? []),
+                'has_machines' => isset($flyData['machines']),
+                'machines_structure' => $flyData['machines'] ?? 'not_found',
+                'machines_count' => count($machines),
+            ]);
             
             // Get recent logs from allocations
             $logs = $flyApi->getLogs($instance->fly_app_id, null, 50);

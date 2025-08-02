@@ -154,7 +154,7 @@ class FlyApi
                         status
                         createdAt
                     }
-                    machines {
+                    machines(active: true, first: 100) {
                         nodes {
                             id
                             name
@@ -163,6 +163,7 @@ class FlyApi
                             config
                             createdAt
                         }
+                        totalCount
                     }
                     volumes {
                         nodes {
@@ -182,6 +183,16 @@ class FlyApi
         ';
 
         $result = $this->query($query, ['appName' => $appName]);
+        
+        // Debug logging to check what's actually returned
+        Log::info('FlyApi getApp response', [
+            'app' => $appName,
+            'has_app' => isset($result['app']),
+            'has_machines' => isset($result['app']['machines']),
+            'machines_structure' => $result['app']['machines'] ?? 'not_found',
+            'machines_count' => isset($result['app']['machines']['nodes']) ? count($result['app']['machines']['nodes']) : 'no_nodes',
+        ]);
+        
         return $result['app'] ?? null;
     }
 
