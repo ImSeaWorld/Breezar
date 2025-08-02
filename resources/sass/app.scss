@@ -1,1 +1,102 @@
 // Application Styles
+.q-drawer .q-item {
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.q-drawer .q-item:hover {
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.q-drawer .q-item.q-router-link--active,
+.q-drawer .q-item.q-item--active {
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+}
+
+.q-drawer .q-item.q-router-link--active .q-icon,
+.q-drawer .q-item.q-item--active .q-icon {
+    color: #1976d2;
+}
+
+.q-drawer .q-separator {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+/* ULTRA SPECIFIC Dark mode overrides - Maximum specificity */
+
+/* Target ALL q-card elements in dark mode with maximum specificity */
+html body.body--dark div.q-card,
+html body.body--dark div.q-card.q-card--dark,
+html body.body--dark div.q-card.q-card--bordered,
+html body.body--dark div.q-card.q-card--flat,
+html body.q-dark div.q-card,
+html body.q-dark div.q-card.q-card--dark,
+html body div.q-card.q-card--dark,
+html body .q-dark div.q-card,
+html body .q-dark div.q-card.q-card--dark,
+.q-layout .q-page .q-card,
+.q-layout .q-page .q-card--dark,
+body.body--dark .q-layout .q-page .q-card,
+body.body--dark .q-layout .q-page .q-card--dark {
+    box-shadow: 0 0 0 0 transparent !important;
+    box-shadow: none !important;
+    -webkit-box-shadow: none !important;
+    -moz-box-shadow: none !important;
+    border: 1px solid rgba(255, 255, 255, 0.12) !important;
+    border-radius: 0px !important;
+    -webkit-border-radius: 0px !important;
+    -moz-border-radius: 0px !important;
+}
+
+/* Override the default Quasar dark card class directly */
+.q-card--dark {
+    box-shadow: 0 0 0 0 transparent !important;
+    box-shadow: none !important;
+    border-color: rgba(255, 255, 255, 0.12) !important;
+    border-radius: 0px !important;
+}
+
+/* Target cards with inline styles or shadow classes */
+html body.body--dark div.q-card[style*="box-shadow"],
+html body.body--dark div.q-card[class*="shadow"],
+html body.q-dark div.q-card[style*="box-shadow"],
+html body.q-dark div.q-card[class*="shadow"],
+.q-card--dark[style*="box-shadow"],
+.q-card--dark[class*="shadow"] {
+    box-shadow: none !important;
+}
+
+/* Header ultra specific */
+html body.body--dark header.q-header,
+html body.body--dark div.q-header,
+html body.q-dark header.q-header,
+html body.q-dark div.q-header,
+.q-header.q-header--dark,
+.q-layout__section--marginal.q-header {
+    box-shadow: none !important;
+    -webkit-box-shadow: none !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.12) !important;
+}
+
+/* Target stat cards specifically */
+html body.body--dark .stat-card,
+html body.q-dark .stat-card,
+.q-dark .stat-card {
+    box-shadow: none !important;
+    border: 1px solid rgba(255, 255, 255, 0.12) !important;
+    border-radius: 0px !important;
+}
+
+/* Nuclear option - target ALL elements with card in class */
+html body.body--dark [class*="q-card"],
+html body.q-dark [class*="q-card"],
+.q-dark [class*="q-card"] {
+    box-shadow: none !important;
+    border-radius: 0px !important;
+}
+
+/* Ensure borders are visible */
+html body.body--dark .q-card:not([class*="no-border"]),
+html body.q-dark .q-card:not([class*="no-border"]) {
+    border: 1px solid rgba(255, 255, 255, 0.12) !important;
+}

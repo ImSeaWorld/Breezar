@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
+use App\Models\LoginLog;
 
 class AuthenticatedSessionController extends Controller
 {
@@ -36,6 +37,15 @@ class AuthenticatedSessionController extends Controller
         $request->authenticate();
 
         $request->session()->regenerate();
+
+        LoginLog::create([
+            'user_id' => Auth::id(),
+            'ip' => $request->ip(),
+            'user_agent' => $request->userAgent(),
+            'timestamp' => now(),
+            'referrer' => $request->header('referer'),
+            'success' => true,
+        ]);
 
         return redirect()->intended(RouteServiceProvider::HOME);
     }

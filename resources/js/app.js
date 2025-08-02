@@ -4,7 +4,7 @@ import { createApp, h } from 'vue';
 import { createInertiaApp, Link } from '@inertiajs/vue3';
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 
-import { Quasar } from 'quasar';
+import { Quasar, Notify } from 'quasar';
 import iconSet from 'quasar/icon-set/mdi-v7.js';
 import '@quasar/extras/mdi-v7/mdi-v7.css';
 import 'quasar/dist/quasar.css';
@@ -34,6 +34,9 @@ createInertiaApp({
             .use(plugin)
             .use(Quasar, {
                 iconSet: iconSet,
+                plugins: {
+                    Notify
+                },
                 config: {
                     dark: 'auto',
                     brand: {

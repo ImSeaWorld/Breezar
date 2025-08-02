@@ -24,7 +24,22 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        // $schedule->command('inspire')->hourly();
+        // Sync Fly.io instances every 30 minutes
+        $schedule->command('fly:sync')
+            ->everyThirtyMinutes()
+            ->withoutOverlapping()
+            ->runInBackground()
+            ->appendOutputTo(storage_path('logs/fly-sync.log'));
+            
+        // Clean up old login logs (older than 30 days)
+        $schedule->call(function () {
+            \App\Models\LoginLog::where('timestamp', '<', now()->subDays(30))->delete();
+        })->daily();
+        
+        // Clean up old activity logs (older than 90 days)
+        $schedule->call(function () {
+            \App\Models\ActivityLog::where('created_at', '<', now()->subDays(90))->delete();
+        })->weekly();
     }
 
     /**

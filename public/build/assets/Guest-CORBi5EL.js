@@ -1,0 +1,1 @@
+import{_ as o}from"./_plugin-vue_export-helper-DE_L9tpe.js";import{g as s,o as t,N as r}from"./app-B9ngRPxC.js";const c={},n={class:"absolute-full"};function a(e,l){return t(),s("div",n,[r(e.$slots,"default")])}const d=o(c,[["render",a]]);export{d as G};

@@ -30,4 +30,9 @@ return [
         'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
     ],
 
+    'fly' => [
+        'api_token' => env('FLY_API_TOKEN'),
+        'org_id' => env('FLY_ORG_ID'),
+    ],
+
 ];
