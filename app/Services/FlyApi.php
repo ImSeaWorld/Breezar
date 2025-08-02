@@ -221,22 +221,25 @@ class FlyApi
         return $this->query($mutation, ['input' => $input]);
     }
 
-    public function getLogs($appName, $machineId = null, $limit = 50)
+    public function getLogs($appName, $allocationId = null, $limit = 50)
     {
         $query = '
-            query GetAppLogs($appName: String!, $limit: Int) {
+            query GetAppLogs($appName: String!, $limit: Int, $range: Int) {
                 app(name: $appName) {
-                    machines {
-                        nodes {
+                    allocations(showCompleted: false) {
+                        id
+                        idShort
+                        desiredStatus
+                        privateIP
+                        region
+                        createdAt
+                        recentLogs(limit: $limit, range: $range) {
                             id
-                            recentLogs(limit: $limit) {
-                                id
-                                instanceId
-                                level
-                                message
-                                region
-                                timestamp
-                            }
+                            instanceId
+                            level
+                            message
+                            region
+                            timestamp
                         }
                     }
                 }
@@ -246,31 +249,36 @@ class FlyApi
         try {
             $data = $this->query($query, [
                 'appName' => $appName,
-                'limit' => $limit
+                'limit' => $limit,
+                'range' => 3600  // Last hour of logs
             ]);
 
-            $machines = $data['app']['machines']['nodes'] ?? [];
+            $allocations = $data['app']['allocations'] ?? [];
             $allLogs = [];
 
-            // Collect logs from all machines
-            foreach ($machines as $machine) {
-                if ($machineId && $machine['id'] !== $machineId) {
-                    continue; // Skip if specific machine requested and this isn't it
+            // Collect logs from all allocations (running instances)
+            foreach ($allocations as $allocation) {
+                if ($allocationId && $allocation['id'] !== $allocationId) {
+                    continue; // Skip if specific allocation requested and this isn't it
                 }
                 
-                $logs = $machine['recentLogs'] ?? [];
+                $logs = $allocation['recentLogs'] ?? [];
                 foreach ($logs as $log) {
-                    $log['machineId'] = $machine['id']; // Add machine ID to log entry
+                    // Add allocation context to log entry
+                    $log['allocationId'] = $allocation['id'];
+                    $log['allocationIdShort'] = $allocation['idShort'];
+                    $log['allocationRegion'] = $allocation['region'];
+                    $log['privateIP'] = $allocation['privateIP'];
                     $allLogs[] = $log;
                 }
             }
 
             // Sort logs by timestamp (newest first)
             usort($allLogs, function($a, $b) {
-                return strtotime($b['timestamp']) - strtotime($a['timestamp']);
+                return strcmp($b['timestamp'], $a['timestamp']);
             });
 
-            // Limit to requested number if collecting from multiple machines
+            // Limit to requested number if collecting from multiple allocations
             if (count($allLogs) > $limit) {
                 $allLogs = array_slice($allLogs, 0, $limit);
             }

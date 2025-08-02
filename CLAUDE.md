@@ -76,8 +76,8 @@ API-NOTES:
 ⚠️ Fly.io-GraphQL: no-official-docs+no-stability-guarantees
 ⚠️ Auth-token: must-use-dashboard-token(not-CLI-token)
 ⚠️ Machines-API: REST-alternative-more-stable
-✓ Fixed-logs: now-using-VM.recentLogs-GraphQL-field
-⚠️ Broken-fields: metrics-not-available-via-GraphQL
+✓ Fixed-logs: now-using-Allocation.recentLogs(limit,range)-GraphQL-field
+⚠️ Broken-fields: metrics+console-session-not-in-standard-GraphQL
 
 REMAINING-CORE:
 [ ] Email-notifications: password-reset,2FA-setup,critical-alerts

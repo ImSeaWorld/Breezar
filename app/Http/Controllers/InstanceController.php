@@ -74,7 +74,7 @@ class InstanceController extends Controller
             $flyData = $flyApi->getApp($instance->fly_app_id);
             $machines = $flyData['data']['app']['machines']['nodes'] ?? [];
             
-            // Get recent logs
+            // Get recent logs from allocations
             $logs = $flyApi->getLogs($instance->fly_app_id, null, 50);
             
             // Get metrics if available
